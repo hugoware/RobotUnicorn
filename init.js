@@ -1,0 +1,1 @@
+setTimeout(ru.core.init, 1000);
