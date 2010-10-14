@@ -1,44 +1,61 @@
 //handles drawing to the canvas view
-ru.core.canvas = (function() {
+ru.canvas = (function() {
     var self = {
         canvas:{},
+        sprites:[],
 
-        /**
-         * draws the requested detail into the view at the next refresh
-         */
+        //applies a request to draw a resource to the canvas
         draw:function(params) {
-
+            self.sprites.push(params);
+            return self.instance;
         },
 
-        /**
-         * clears the current view
-         */
+        //clears the view entirely
         clear:function(params) {
-
+            return self.instance;
         },
+
+        //flushes waiting draw requests
+        refresh:function(params) {
+            self.sprites = [];
+            return self.instance;
+        },
+
+        //creates the canvas in the html
+        init:function(params) {
+
+            //create the canvas information
+            self.canvas = document.getElementById(params.target);
+			self.context = self.canvas.getContext('2d');
+
+            //set the attributes for the element
+            var style = ru.util.format("height:{0};width:{0};position:absolute;top:0;left:0;", params.height, params.width);
+            self.canvas.setAttribute("width", params.width);
+            self.canvas.setAttribute("height", params.height);
+            self.canvas.setAttribute("style", style);
+
+        }
+
+    };
+
+    //public members
+    return {
 
         /**
-         * flushes all waiting drawing views
+         * draws a sprite into the view
          */
-        refresh:function(params) {
-
-        },
+        draw:self.draw,
 
         /**
          * prepares the canvas in the view
          */
-        init:function(params) {
-        },
+        init:self.init
 
-        //public members
-        instance:{
-
-            draw:self.draw,
-            init:self.init
-        }
     };
-    return self.instance;
+
 })();
+
+
 
 
 
