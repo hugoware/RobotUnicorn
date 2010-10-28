@@ -23,18 +23,40 @@ ru.resource = (function() {
 
         },
 
-        //includes a new image resource
-        image:function(params) {
-            var resource = new self.resource(Image, params);
-            self.add(resource, self.images);
-            return self.instance;
+        //handles finding values
+        find:{
+
+            //gets a loaded resource by a name
+            image:function(name) {
+                name = ru.util.alias(name);
+                return self.images[name];
+            },
+
+            //gets a loaded resource by a name
+            script:function(name) {
+                name = ru.util.alias(name);
+                return self.scripts[name];
+            }
+
         },
 
-        //creates a new script and saves the resource
-        script:function(params) {
-            var resource = new self.resource(Script, params);
-            self.add(resource, self.scripts);
-            return self.instance;
+        //handles loading external values
+        load:{
+
+            //includes a new image resource
+            image:function(params) {
+                var resource = new self.resource(Image, params);
+                self.add(resource, self.images);
+                return self.instance;
+            },
+
+            //creates a new script and saves the resource
+            script:function(params) {
+                var resource = new self.resource(Script, params);
+                self.add(resource, self.scripts);
+                return self.instance;
+            }
+
         },
 
         //adds a new item to the resource list
@@ -45,7 +67,7 @@ ru.resource = (function() {
 
         //load each of the resources with the provided delegate
         batch:function(collection, load) {
-            if (!(collection instanceof Array)) collection = [colection];
+            if (!(collection instanceof Array)) collection = [collection];
             ru.util.each(collection, load);
         },
 
@@ -61,14 +83,38 @@ ru.resource = (function() {
     return {
 
         /**
-         * loads in external scripts (allows a collection of scripts)
+         * handles loading external resources
          */
-        script:function(images) { self.batch(images, function(image) { self.script(image); }); },
+        load:{
+
+            /**
+             * loads in external scripts (allows a collection of scripts)
+             */
+            script:function(images) { self.batch(images, function(image) { self.script(image); }); },
+
+            /**
+             * loads in external images (allows a collection of images)
+             */
+            image:function(images) { self.batch(images, function(image) { self.image(image); }); }
+
+        },
 
         /**
-         * loads in external images (allows a collection of images)
+         * Accesses loaded values
          */
-        image:function(images) { self.batch(images, function(image) { self.image(image); }); }
+        find:{
+
+            /**
+             * Finds an image resource that has already been loaded
+             */
+            image:self.find.image,
+
+            /**
+             * Finds a script resource that has already been loaded
+             */
+            script:self.find.script
+
+        }
 
     };
 

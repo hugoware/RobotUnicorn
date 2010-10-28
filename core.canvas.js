@@ -21,6 +21,30 @@ ru.canvas = (function() {
             return self.instance;
         },
 
+        //causes all sprites to be drawn
+        update:function() {
+
+            //render each of the sprites into the view
+            ru.util.each(self.sprites, function(sprite) {
+
+                //update the resource if needed
+                sprite.resource = typeof sprite.resource == "string"
+                    ? ru.resource.find.image(sprite.resource)
+                    : sprite.resource;
+
+                //draw the image
+                self.context.drawImage(
+                    sprite.resource,
+                    sprite.x,
+                    sprite.y,
+                    sprite.width,
+                    sprite.height
+                    );
+
+            });
+
+        },
+
         //creates the canvas in the html
         init:function(params) {
 
@@ -49,7 +73,12 @@ ru.canvas = (function() {
         /**
          * prepares the canvas in the view
          */
-        init:self.init
+        init:self.init,
+
+        /**
+         * Causes the canvas to draw all waiting sprites
+         */
+        update:self.update
 
     };
 
