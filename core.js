@@ -1,32 +1,29 @@
 var ru = {};
 ru.core = (function() {
     var self = {
+        game:null,
+        canvas:null,
 
         //prepares the application
         init:function() {
 
-            //initialize the canvas
-            ru.canvas.init({
+            //create the canvas view
+            self.canvas = new ru.canvas({
                 target: "view",
                 height: "100%",
                 width: "100%"
             });
-
-            //start the game loop
-            //setTimeout(ru.game.loop, 33);
-
+            
+            //start the loop
+            self.game = new ru.game({
+                canvas:self.canvas
+            });
+            self.game.begin();
+            
         }
-
-    };
-
-    //public members
-    return {
-
-        /**
-         * starts the game in the browser
-         */
-        init:self.init
-
     };
     
+    //start the game 
+    window.ru = self;
+    window.setTimeout(self.init, 1000);
 })();

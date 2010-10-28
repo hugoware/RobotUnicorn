@@ -1,5 +1,5 @@
 //manages resources for the view
-ru.resource = (function() {
+ru.resource = function() {
     var self = {
         images:{},
         scripts:{},
@@ -118,4 +118,4 @@ ru.resource = (function() {
 
     };
 
-})();
+};
