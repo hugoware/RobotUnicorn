@@ -9,7 +9,12 @@
         <script type="text/javascript" src="core.canvas.js" ></script>
 		<script type="text/javascript" src="keagan.js" ></script>
         <script type="text/javascript" >
-            setTimeout(ru.core.init, 1000);
+            setTimeout(function() {
+                ru.core.init();
+
+                ru.resource.load.image("x-icon", "resources/delete-icon.png");
+
+            }, 1000);
         </script>
     </body>
 </html>

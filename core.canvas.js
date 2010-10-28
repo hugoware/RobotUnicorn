@@ -73,7 +73,12 @@ ru.canvas = (function() {
         /**
          * prepares the canvas in the view
          */
-        init:self.init
+        init:self.init,
+
+        /**
+         * Causes the canvas to draw all waiting sprites
+         */
+        update:self.update
 
     };
 

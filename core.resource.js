@@ -67,7 +67,7 @@ ru.resource = (function() {
 
         //load each of the resources with the provided delegate
         batch:function(collection, load) {
-            if (!(collection instanceof Array)) collection = [colection];
+            if (!(collection instanceof Array)) collection = [collection];
             ru.util.each(collection, load);
         },
 
