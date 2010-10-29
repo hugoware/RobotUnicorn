@@ -1,11 +1,14 @@
 var hugobot = function() {
     var self = {
-    
+		right:true,
+        speed:2,
+	
         //game: current state of the game
         //unit: the position and actions for your bot
         update:function(game, unit) {
-            unit.position.x += 4;
-        
+			self.right = self.right == true && unit.position.x < 499 ? true : false;
+			self.right = self.right == false && unit.position.x > 0 ? false : true;
+            unit.position.x += self.right ? self.speed : -self.speed;
         }
     };
     

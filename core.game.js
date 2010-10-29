@@ -109,7 +109,7 @@ ru.game = function(options) {
             self.prepare(self.bots.hugo);
             
             //update the second player
-            self.bots.hugo.position.y = 300;
+            self.bots.keagan.position.y = 300;
             
             //start the loading interval
             window.setInterval(self.update, 33);
