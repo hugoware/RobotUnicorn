@@ -13,7 +13,7 @@ var keaganbot = function() {
     
     //the update options
     this.update = self.update;
-    this.image = "resources/delete-icon.png";
+    this.image = "resources/keagan-ship.jpg";
     this.height = 100;
     this.width = 100;
 };
