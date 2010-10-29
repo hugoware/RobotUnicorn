@@ -24,6 +24,7 @@ ru.canvas = function(options) {
 
         //causes all sprites to be drawn
         update:function() {
+            self.canvas.width = self.canvas.width;
 
             //render each of the sprites into the view
             ru.util.each(self.sprites, function(sprite) {

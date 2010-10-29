@@ -1,13 +1,14 @@
 var keaganbot = function() {
     var self = {
     
+        right:true,
+        speed:5,
+    
+    
         //game: current state of the game
         //unit: the position and actions for your bot
         update:function(game, unit) {
-            unit.position.x += unit.speed;
-        
-            //return control actions for this bot
-            return control;
+            unit.position.x += self.speed;
         }
     };
     

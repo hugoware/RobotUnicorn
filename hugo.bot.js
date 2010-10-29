@@ -4,10 +4,8 @@ var hugobot = function() {
         //game: current state of the game
         //unit: the position and actions for your bot
         update:function(game, unit) {
-            unit.position.x += unit.speed;
+            unit.position.x += 4;
         
-            //return control actions for this bot
-            return control;
         }
     };
     

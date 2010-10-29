@@ -13,13 +13,19 @@ ru.game = function(options) {
         create:{
 
             //returns an object to control the bot
-            unitState:function(){
-
+            unitState:function(unit) {
+                return {
+                    position:{
+                        x:unit.position.x,
+                        y:unit.position.y,
+                    }
+                };
             },
 
             //returns game information for a turn
             gameState:function() {
-
+                return {
+                };
             }
 
         },
@@ -29,58 +35,82 @@ ru.game = function(options) {
 
             //get the info for this turn
             var game = self.create.gameState();
-            var unit = self.create.unitState();
+            var unit = self.create.unitState(bot);
             var control = null;
 
             //try and perform the work
-            try { control = bot.update(state, unit); }
+            try { bot.update(game, unit); }
             catch (e) { unit.error = e.toString(); }
 
-            //check for return errors
-            if (!control) unit.error = "Error: No control returned from bot!";
-
             //handle refreshing the view
-            self.validate(bot, control, game);
+            self.validate(bot, unit, game);
         },
 
         //make sure the unit isn't cheating
-        validate:function(bot, control) {
-
+        validate:function(bot, unit) {
+            bot.position.x = unit.position.x;
+            self.refresh(bot);
         },
 
         //handles drawing the bot into the view
-        refresh:function(bot, control) {
+        refresh:function(bot) {
+        
+            //draw the new position for the bot
+            self.canvas.draw({
+                resource:bot.resource,
+                x:bot.position.x,
+                y:bot.position.y
+            });
 
         },
 
+        //gets a unit ready for use
+        prepare:function(unit) {
+        
+            //load in the required resources
+            self.resource.load.image({
+                name:unit.name,
+                url:unit.image,
+                height:unit.height,
+                width:unit.width
+            });
+            
+            //grab the image to use
+            unit.resource = self.resource.find.image(unit.name);
+            
+            //update the starting parameters
+            unit.position = {
+                x:0,
+                y:0
+            };
+        
+        },
+        
         //updates the timeline for the game
         update:function() {
         
-            self.canvas.draw({
-                resource:self.resource.find.image("x"),
-                x:0,
-                y:0
-            });
-        
+            //update the bot positions
+            self.check(self.bots.keagan);
+            self.check(self.bots.hugo);
+            
+            //update the bullets in the view
+            //self.projectiles.update();
+            
+            //update the view
             self.canvas.update();
-        
-            return;
-            self.update(self.bots.keagan);
-            self.update(self.bots.hugo);
+            
         },
 
         //prepares the game to run
         begin:function() {
         
-            //load in the required resources
-            self.resource.load.image({
-                name:"x",
-                url:"resources/delete-icon.png",
-                height:50,
-                width:50
-            });
+            //prepare the views
+            self.prepare(self.bots.keagan);
+            self.prepare(self.bots.hugo);
             
-        
+            //update the second player
+            self.bots.hugo.position.y = 300;
+            
             //start the loading interval
             window.setInterval(self.update, 33);
         }
