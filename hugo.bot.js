@@ -13,4 +13,7 @@ var hugobot = function() {
     
     //the update options
     this.update = self.update;
+    this.image = "resources/delete-icon.png";
+    this.height = 100;
+    this.width = 100;
 };
