@@ -1,7 +1,8 @@
 //handles drawing to the canvas view
 ru.canvas = function(options) {
     var self = {
-        canvas:{},
+        canvas:null,
+        context:null,
         sprites:[],
 
         //applies a request to draw a resource to the canvas
@@ -26,41 +27,42 @@ ru.canvas = function(options) {
 
             //render each of the sprites into the view
             ru.util.each(self.sprites, function(sprite) {
-
-                //update the resource if needed
-                sprite.resource = typeof sprite.resource == "string"
-                    ? ru.resource.find.image(sprite.resource)
-                    : sprite.resource;
-
+            
                 //draw the image
                 self.context.drawImage(
-                    sprite.resource,
+                    sprite.resource.content,
                     sprite.x,
                     sprite.y,
-                    sprite.width,
-                    sprite.height
+                    sprite.width || sprite.resource.width,
+                    sprite.height || sprite.resource.height
                     );
 
             });
+            
+            //unload the sprites
+            self.refresh();
 
         },
 
         //creates the canvas in the html
-        init:function(params) {
+        init:function() {
 
             //create the canvas information
-            self.canvas = document.getElementById(params.target);
+            self.canvas = document.getElementById(options.target);
 			self.context = self.canvas.getContext('2d');
 
             //set the attributes for the element
-            var style = ru.util.format("height:{0};width:{0};position:absolute;top:0;left:0;", params.height, params.width);
-            self.canvas.setAttribute("width", params.width);
-            self.canvas.setAttribute("height", params.height);
+            var style = ru.util.format("height:{0};width:{0};", options.height, options.width);
+            self.canvas.setAttribute("width", options.width);
+            self.canvas.setAttribute("height", options.height);
             self.canvas.setAttribute("style", style);
 
         }
 
     };
+    
+    //initalize the canvas
+    self.init();
 
     //public members
     return {
@@ -77,10 +79,7 @@ ru.canvas = function(options) {
 
     };
     
-    self.init(options);
-
 };
-
 
 
 

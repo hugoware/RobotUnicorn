@@ -57,7 +57,7 @@ ru.game = function(options) {
         update:function() {
         
             self.canvas.draw({
-                resource:"x",
+                resource:self.resource.find.image("x"),
                 x:0,
                 y:0
             });
@@ -75,7 +75,9 @@ ru.game = function(options) {
             //load in the required resources
             self.resource.load.image({
                 name:"x",
-                url:"resources/delete-icon.png"
+                url:"resources/delete-icon.png",
+                height:50,
+                width:50
             });
             
         
