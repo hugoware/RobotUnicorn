@@ -1,5 +1,5 @@
 //handles drawing to the canvas view
-ru.canvas = (function() {
+ru.canvas = function(options) {
     var self = {
         canvas:{},
         sprites:[],
@@ -71,18 +71,15 @@ ru.canvas = (function() {
         draw:self.draw,
 
         /**
-         * prepares the canvas in the view
-         */
-        init:self.init,
-
-        /**
          * Causes the canvas to draw all waiting sprites
          */
         update:self.update
 
     };
+    
+    self.init(options);
 
-})();
+};
 
 
 
