@@ -6,9 +6,10 @@ ru.resource = function() {
 
         //loads an external resource
         resource:function(type, params) {
+            if (!params) return;
 
             //start the image load
-            var instance = new type();
+            var instance = type == "image" ? new Image() : new Script();
 			instance.onload = params.loaded;
 
             //save the instance
@@ -45,14 +46,14 @@ ru.resource = function() {
 
             //includes a new image resource
             image:function(params) {
-                var resource = new self.resource(Image, params);
+                var resource = new self.resource("image", params);
                 self.add(resource, self.images);
                 return self.instance;
             },
 
             //creates a new script and saves the resource
             script:function(params) {
-                var resource = new self.resource(Script, params);
+                var resource = new self.resource("script", params);
                 self.add(resource, self.scripts);
                 return self.instance;
             }
@@ -68,7 +69,9 @@ ru.resource = function() {
         //load each of the resources with the provided delegate
         batch:function(collection, load) {
             if (!(collection instanceof Array)) collection = [collection];
-            ru.util.each(collection, load);
+            ru.util.each(collection, function(item, index) {
+                load(item);
+            });
         },
 
         //removes an image from the view
@@ -90,12 +93,12 @@ ru.resource = function() {
             /**
              * loads in external scripts (allows a collection of scripts)
              */
-            script:function(images) { self.batch(images, function(image) { self.script(image); }); },
+            script:function(images) { self.batch(images, function(image) { self.load.script(image); }); },
 
             /**
              * loads in external images (allows a collection of images)
              */
-            image:function(images) { self.batch(images, function(image) { self.image(image); }); }
+            image:function(images) { self.batch(images, function(image) { self.load.image(image); }); }
 
         },
 
