@@ -31,7 +31,7 @@ ru.util = (function() {
         //loops through a collection performing an action
         each:function(collection, action) {
             if (collection instanceof Array) {
-                for(var index = 0; index < collection.length++; i++) {
+                for(var index = 0; index < collection.length; index++) {
                     if (action(collection[index], index) === false) return;
                 }
             }

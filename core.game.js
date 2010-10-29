@@ -56,6 +56,15 @@ ru.game = function(options) {
         //updates the timeline for the game
         update:function() {
         
+            self.canvas.draw({
+                resource:"x",
+                x:0,
+                y:0
+            });
+        
+            self.canvas.update();
+        
+            return;
             self.update(self.bots.keagan);
             self.update(self.bots.hugo);
         },
@@ -64,6 +73,10 @@ ru.game = function(options) {
         begin:function() {
         
             //load in the required resources
+            self.resource.load.image({
+                name:"x",
+                url:"resources/delete-icon.png"
+            });
             
         
             //start the loading interval
