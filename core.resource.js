@@ -19,7 +19,9 @@ ru.resource = function() {
                     ? function() { instance.src = params.url; }
                     : function() { instance.src = params.url + "?" + ru.util.ticks(); },
                 url:params.url,
-                name:ru.util.alias(params.name)
+                name:ru.util.alias(params.name),
+                height:params.height,
+                width:params.width
             };
 
         },
@@ -48,6 +50,7 @@ ru.resource = function() {
             image:function(params) {
                 var resource = new self.resource("image", params);
                 self.add(resource, self.images);
+                resource.load();
                 return self.instance;
             },
 
@@ -55,6 +58,7 @@ ru.resource = function() {
             script:function(params) {
                 var resource = new self.resource("script", params);
                 self.add(resource, self.scripts);
+                resource.load();
                 return self.instance;
             }
 
