@@ -4,7 +4,8 @@ ru.player = function(bot, options, isPlayer2) {
     
         //parameters for all bots
         settings:{
-            yPadding:40
+            yPadding:40,
+            xPadding:50
         },
         
         //ship icon to use
@@ -37,7 +38,7 @@ ru.player = function(bot, options, isPlayer2) {
             catch (e) { bot.error = "Exception: " + e.toString(); }
             
             //then apply the changes
-            self.manage.apply(game, control);
+            self.manage.apply(game, control, state);
         
         },
         
@@ -111,10 +112,9 @@ ru.player = function(bot, options, isPlayer2) {
             },
             
             //attempts to apply the requested rules for a turn
-            apply:function(game, control) {
-                
+            apply:function(game, control, state) {
+            
                 //check the movement
-                
                 if (Math.abs(bot.position.x - control.instance.position.x) > options.unit.speed) {
                     bot.error = "Exception: Moved too far on a turn!";
                     return;
@@ -124,6 +124,11 @@ ru.player = function(bot, options, isPlayer2) {
                     bot.position.x = control.instance.position.x;
                 }
                 
+                //stay in the view (not an error for now)
+                var max = { left:self.settings.xPadding, right:state.view.width - (bot.position.width + self.settings.xPadding) };
+                if (bot.position.x < max.left) bot.position.x = max.left;
+                if (bot.position.x > max.right) bot.position.x = max.right;
+                
                 //if firing a weapon
                 if (control.action == "shoot" && 
                     bot.cooldown[control.weapon] <= 0) {
@@ -131,8 +136,8 @@ ru.player = function(bot, options, isPlayer2) {
                     //create a projectile for the view
                     var projectile = game.projectiles.add({
                         type:control.weapon,
-                        startX:bot.position.x,
-                        startY:bot.position.y,
+                        startX:bot.position.x + (bot.position.width / 2),
+                        startY:bot.position.y + (isPlayer2 ? 0 : bot.position.height),
                         down:!isPlayer2
                     });
                     

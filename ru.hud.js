@@ -45,7 +45,10 @@ ru.hud = function(options) {
             
                 //check if any player has lost
                 var image = null;
-                if (game.view.players.player1.isDead()) {
+                if (game.view.players.player1.isDead() && game.view.players.player2.isDead()) {
+                    image = self.resources.drawGame;
+                }
+                else if (game.view.players.player1.isDead()) {
                     image = self.resources.player2win;
                 }
                 else if (game.view.players.player2.isDead()) {
@@ -80,8 +83,8 @@ ru.hud = function(options) {
                 var x = canvas.size.width - 50;
                 ru.util.each(player.cooldown, function(item, name) {
                     var image = self.resources[name][item > 0 ? "cooldown" : "ready"];
-                    canvas.draw({ resource:image.resource, x:x, y:zone.cooldown.y, height:30, width:30 });
-                    x -= 30;
+                    canvas.draw({ resource:image.resource, x:x, y:zone.cooldown.y });
+                    x -= image.resource.width;
                 });
                 
             }
@@ -93,6 +96,7 @@ ru.hud = function(options) {
             self.resources.health = ru.resource.load({name:"health"});
             self.resources.player1win = ru.resource.load({name:"player1win"});
             self.resources.player2win = ru.resource.load({name:"player2win"});
+            self.resources.drawGame = ru.resource.load({name:"drawGame"});
         
             //load each of the weapon icons
             ru.util.each(options.weapons, function(item, name) {

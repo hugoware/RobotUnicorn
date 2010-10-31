@@ -9,17 +9,17 @@ var dopeybot = function() {
         //game : current state of the game
         //bot  : the position and actions for your bot
         update:function(game, bot) {
-            
+            bot.shoot("lazer")
             switch(ru.util.random(100)) {
                 case 0: bot.shoot("lazer");
                     break;
-                case 4: throw ru.util.pick(
-                    "What does this button do?",
-                    "Restroom break - BRB dudez...",
-                    "Self-destruct? Uh oh!",
-                    "Pitch? Yaw? Bah... just details..."
-                    );
-                    break;
+                // case 4: throw ru.util.pick(
+                    // "What does this button do?",
+                    // "Restroom break - BRB dudez...",
+                    // "Self-destruct? Uh oh!",
+                    // "Pitch? Yaw? Bah... just details..."
+                    // );
+                    // break;
             }
             
         }

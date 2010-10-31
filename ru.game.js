@@ -16,8 +16,8 @@ ru.game = function(options) {
                 
                 //unique details for the projectile
                 var control = {
-                    x:params.startX + (instance.settings.sprite.width / 2),
-                    y:params.startY + (params.down ? 100 : -instance.settings.sprite.height),
+                    x:params.startX - (instance.settings.sprite.width / 2),
+                    y:params.startY + (params.down ? 0 : -instance.settings.sprite.height),
                     down:params.down,
                     decay:instance.settings.decay,
                     speed:instance.settings.speed,
