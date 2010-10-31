@@ -16,7 +16,8 @@ ru.tracker = function() {
                 height:50,
                 width:50,
                 half:25
-            }
+            },
+            trail:[]
         },
         
         //handles moving the projectile
@@ -34,6 +35,23 @@ ru.tracker = function() {
             //move the projectile
             if (draw) control.x += left ? -draw : draw;
             control.y += control.down ? self.settings.speed : -self.settings.speed;
+            
+            //update the trailing
+            self.settings.trail.push({
+                y:control.y,
+                x:control.x
+            });
+            
+            //update the trailing
+            for (var i = self.settings.trail.length - 1; i-- > Math.max(self.settings.trail.length - 5, 0);) {
+                game.effects.add({
+                    name:"tracker",
+                    life:1,
+                    x:self.settings.trail[i].x,
+                    y:self.settings.trail[i].y
+                });
+            }
+            
         }
         
     };
