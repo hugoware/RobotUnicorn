@@ -3,16 +3,93 @@
     </head>
     <body>
         <canvas id="view" ></canvas>
-        <script type="text/javascript" src="core.js" ></script>
-        <script type="text/javascript" src="core.util.js" ></script>
-        <script type="text/javascript" src="core.resource.js" ></script>
-        <script type="text/javascript" src="core.canvas.js" ></script>
-        <script type="text/javascript" src="core.game.js" ></script>
+        
+        <!-- game functions -->
+        <script type="text/javascript" src="ru.core.js" ></script>
+        <script type="text/javascript" src="ru.util.js" ></script>
+        <script type="text/javascript" src="ru.resource.js" ></script>
+        <script type="text/javascript" src="ru.canvas.js" ></script>
+        <script type="text/javascript" src="ru.game.js" ></script>
+        <script type="text/javascript" src="ru.hud.js" ></script>
+        <script type="text/javascript" src="ru.effect.js" ></script>
+        
+        <!-- game elements -->
+        <script type="text/javascript" src="ru.background.js" ></script>
+        <script type="text/javascript" src="ru.player.js" ></script>
+        
+        <!-- weapons -->
+        <script type="text/javascript" src="ru.projectile.js" ></script>
+        <script type="text/javascript" src="ru.lazer.js" ></script>
+        <script type="text/javascript" src="ru.burst.js" ></script>
+        <script type="text/javascript" src="ru.tracker.js" ></script>
+        
+        <!-- player bots -->
+        <script type="text/javascript" src="dopey.bot.js" ></script>
         <script type="text/javascript" src="keagan.bot.js" ></script>
         <script type="text/javascript" src="hugo.bot.js" ></script>
-		<script type="text/javascript" src="keagan.js" ></script>
+        
         <script type="text/javascript" >
-            
+        
+            //details for the game
+            ru.core.create({
+                preload:[
+                    { name:"explode", url:"resources/explode-1.png" },
+                    { name:"lazer", url:"resources/lazer.png" },
+                    { name:"lazer-ready", url:"resources/lazer-ready.png" },
+                    { name:"lazer-cooldown", url:"resources/lazer-cooldown.png" },
+                    { name:"burst", url:"resources/burst.png" },
+                    { name:"burst-ready", url:"resources/burst-ready.png" },
+                    { name:"burst-cooldown", url:"resources/burst-cooldown.png" },
+                    { name:"tracker", url:"resources/tracker.png" },
+                    { name:"tracker-ready", url:"resources/tracker-ready.png" },
+                    { name:"tracker-cooldown", url:"resources/tracker-cooldown.png" },
+                    { name:"player1", url:"resources/player-1-ship.png" },
+                    { name:"player2", url:"resources/player-2-ship.png" },
+                    { name:"health", url:"resources/health-bar.png" }
+                ],
+                delay:1000,
+                fps:30,
+                
+                //misc settings
+                settings:{
+                },
+                
+                //the background imagery
+                background:{
+                    image:"resources/background.jpg",
+                    height:600,
+                    width:800
+                },
+                
+                //the area to draw in
+                canvas:{
+                    target:"view",
+                    height:600,
+                    width:800
+                },
+                
+                //unit limitations
+                unit:{
+                    life:100,
+                    shield:100,
+                    speed:10,
+                    errorDelay:100,
+                    errorPenalty:20,
+                    maxWeapons:3
+                },
+                
+                //available weapons for the game
+                weapons:{
+                    lazer:ru.lazer,
+                    burst:ru.burst,
+                    tracker:ru.tracker,
+                },
+                
+                //player units
+                player1:new hugobot(),
+                player2:new hugobot()
+            });
+        
         </script>
     </body>
 </html>

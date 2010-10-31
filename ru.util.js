@@ -1,5 +1,5 @@
 //utility functions
-ru.util = (function() {
+ru.util = new function() {
     var self = {
 
         //creates a formatted alias name
@@ -46,6 +46,36 @@ ru.util = (function() {
         ticks:function() {
             return 123456;
         },
+        
+        //performs a random action
+        random:function() {
+            var args = self.toArray(arguments);
+            return args.length == 1 ? self._randomNumber(0, args[0])
+                : args.length == 2 ? self._randomNumber(args[0], args[1])
+                : 0;
+        },
+        
+        //creates a copy of a object
+        clone:function(obj, deep) {
+            var clone = {};
+            for (var item in obj) {
+                clone[item] = typeof obj[item] == "object" ? self.clone(obj[item]) : obj[item];
+            }
+            return clone;
+        },
+        
+        //picks a random item from a selection
+        pick:function() {
+            var args = self.toArray(arguments);
+            var index = self.random(0, args.length - 1);
+            return args[index];
+        },
+        
+        //picks a random number within a range
+        _randomNumber:function(min, max) {
+            if (min >= max) return min;
+            return parseInt((Math.random() * (max + 1)) + min);
+        },
 
         //formats string values
         format:function() {
@@ -68,42 +98,16 @@ ru.util = (function() {
 
     };
 
-    //public members
-    return {
-        /**
-         * creates a formatted alias name
-         */
-        alias:self.alias,
+    //public actions
+    this.alias = self.alias;
+    this.trim = self.trim;
+    this.toString = self.toString;
+    this.toArray = self.toArray;
+    this.each = self.each;
+    this.ticks = self.ticks;
+    this.format = self.format;
+    this.random = self.random;
+    this.clone = self.clone;
+    this.pick = self.pick;
 
-        /**
-         * removes leading and trailing spaces
-         */
-        trim:self.trim,
-
-        /**
-         * converts an object into a string
-         */
-        toString:self.toString,
-
-        /**
-         * converts an object into an array
-         */
-        toArray:self.toArray,
-
-        /**
-         * performs a loop through a collection of items
-         */
-        each:self.each,
-
-        /**
-         * returns a unique number to use to download resources
-         */
-        ticks:self.ticks,
-
-        /**
-         * formats a string with arguments using {0} for markers
-         */
-        format:self.format
-    };
-
-})();
+};
