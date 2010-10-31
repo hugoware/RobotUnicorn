@@ -18,9 +18,10 @@ ru.projectile = function(options) {
             if (hit) {
                 game.effects.add({
                     name:"explode",
-                    x:options.control.x,
-                    y:options.control.y,
-                    live:7
+                    x:hit.x,
+                    y:hit.y,
+                    live:7,
+                    center:true
                 });
             }
             
@@ -39,10 +40,12 @@ ru.projectile = function(options) {
         
         //checks for hitting a unit
         check:function(game, player) {
-            if (!self.isHit(player)) return false;
-            player.bot.life.current -= options.instance.settings.damage;
-            options.remove();
-            return true;
+            var hit = self.isHit(player);
+            if (hit) {
+                player.bot.life.current -= options.instance.settings.damage;
+                options.remove();
+            }
+            return hit;
         },
         
         //checks if a unit was hit or not
@@ -65,17 +68,18 @@ ru.projectile = function(options) {
             };
             
             //check each of the points
-            if (self._between(check.x, check.y, rect)) return true;
-            if (self._between(check.x + check.width, check.y, rect)) return true;
-            if (self._between(check.x, check.y + check.height, rect)) return true;
-            if (self._between(check.x + check.width, check.y + check.height, rect)) return true;
-            return false;
-
+            var hit = null;
+            hit = self._between(check.x, check.y, rect);
+            if (!hit) hit = self._between(check.x + check.width, check.y, rect);
+            if (!hit) hit = self._between(check.x, check.y + check.height, rect);
+            if (!hit) hit = self._between(check.x + check.width, check.y + check.height, rect);
+            return hit;
         },
         
         //checks for values between a range
         _between:function(x, y, rect) {
-            return (x > rect.l && x < rect.r) && (y > rect.t && y < rect.b);
+            if ((x > rect.l && x < rect.r) && (y > rect.t && y < rect.b)) return { x:x, y:y };
+            return null;
         },
         
         //prepares the projectile to be used

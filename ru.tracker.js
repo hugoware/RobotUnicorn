@@ -6,8 +6,8 @@ ru.tracker = function() {
         settings:{
             speed:1,
             decay:200,
-            gain:0.5,
-            drag:0.33,
+            gain:0.25,
+            drag:0.25,
             damage:20,
             draw:0,
             cooldown:250,
@@ -30,10 +30,10 @@ ru.tracker = function() {
            
             //update the draw power
             self.settings.speed += self.settings.gain;
-            self.settings.draw = self.settings.speed * self.settings.drag;
+            self.settings.draw += left ? -self.settings.drag : self.settings.drag;
             
             //move the projectile
-            if (draw) control.x += left ? -draw : draw;
+            control.x += self.settings.draw
             control.y += control.down ? self.settings.speed : -self.settings.speed;
             
             //update the trailing
@@ -43,7 +43,8 @@ ru.tracker = function() {
             });
             
             //update the trailing
-            for (var i = self.settings.trail.length - 1; i-- > Math.max(self.settings.trail.length - 5, 0);) {
+            for (var i = self.settings.trail.length - 1; i-- > Math.max(self.settings.trail.length - 8, 0);) {
+                if (i % 2 != 0) continue;
                 game.effects.add({
                     name:"tracker",
                     life:1,

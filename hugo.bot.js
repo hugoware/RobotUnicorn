@@ -3,7 +3,7 @@ var hugobot = function() {
         
         state:{
             left:true,
-            speed:5
+            speed:7
         },
         
         //game : current state of the game
@@ -21,7 +21,7 @@ var hugobot = function() {
                     break;
                 case 4: bot.shoot("tracker");
                     break;
-                case 4: throw "sample exception!";
+                case 300: throw "sample exception!";
                     break;
             }
         

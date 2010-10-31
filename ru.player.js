@@ -32,7 +32,7 @@ ru.player = function(bot, options, isPlayer2) {
             
             //let the bot have a turn
             try { bot.update(state, control.instance); }
-            catch (e) { bot.error = "Exception: " + e.toString(); }
+            catch (e) { bot.error = "Error: " + e.toString(); }
             
             //then apply the changes
             self.manage.apply(game, control);
@@ -43,10 +43,17 @@ ru.player = function(bot, options, isPlayer2) {
         manage:{
         
             //handles errors for a unit
-            error:function() {
+            error:function(game) {
                 
                 //apply the penalty
                 if (bot.errorDelay == null) {
+                    options.game.effects.add({
+                        name:"exception",
+                        live:options.unit.errorDelay,
+                        x:bot.position.x + (bot.position.width / 2),
+                        y:bot.position.y + (bot.position.height / 2),
+                        center:true
+                    });
                     bot.errorDelay = options.unit.errorDelay;
                     bot.life.current -= options.unit.errorPenalty;
                 }

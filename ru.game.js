@@ -59,10 +59,13 @@ ru.game = function(options) {
             id:0,
             add:function(params) {
                 var identity = "i"+(self.effects.id++);
+                var image = ru.resource.load({name:params.name});
+                
+                //display into the view
                 self.view.effects[identity] = new ru.effect({
-                    image:ru.resource.load({name:params.name}),
-                    x:params.x,
-                    y:params.y,
+                    image:image,
+                    x:params.x - (params.center ? (image.resource.width / 2) : 0),
+                    y:params.y - (params.center ? (image.resource.height / 2) : 0),
                     remove:function() { self.effects.remove(identity); },
                     live:params.live
                 });
@@ -85,7 +88,7 @@ ru.game = function(options) {
         
         //the current units in the game
         view:{
-            hud:new ru.hud({ canvas:options.canvas, weapons:options.weapons, player1:options.player1, player2:options.player2 }),
+            hud:new ru.hud({ game:self, canvas:options.canvas, weapons:options.weapons, player1:options.player1, player2:options.player2 }),
             projectiles:{},
             effects:{},
             players:{
@@ -133,6 +136,9 @@ ru.game = function(options) {
         }
 
     };
+    
+    //share the game throughout
+    options.game = self;
 
     //updates the game info
     this.begin = self.begin;
