@@ -27,15 +27,40 @@ ru.hud = function(options) {
         },
         
         //draws the hud into the view
-        draw:function(canvas) {
+        draw:function(canvas, game) {
         
             //player names
             self._update.player(canvas, options.player1, self.zone.player1);
             self._update.player(canvas, options.player2, self.zone.player2);
             
+            //if there is a winner
+            self._update.victory(canvas, game);
+            
         },
         
         _update:{
+        
+            //updates the victory view
+            victory:function(canvas, game) {
+            
+                //check if any player has lost
+                var image = null;
+                if (game.view.players.player1.isDead()) {
+                    image = self.resources.player2win;
+                }
+                else if (game.view.players.player2.isDead()) {
+                    image = self.resources.player1win;
+                }
+                
+                //if not, just exit
+                if (!image) return;
+                canvas.draw({
+                    resource:image.resource,
+                    x:(options.canvas.width / 2) - (image.resource.width / 2),
+                    y:(options.canvas.height / 2) - (image.resource.height / 2)
+                });
+                
+            },
         
             //updates an individual players information
             player:function(canvas, player, zone) {
@@ -58,7 +83,7 @@ ru.hud = function(options) {
                     canvas.draw({ resource:image.resource, x:x, y:zone.cooldown.y, height:30, width:30 });
                     x -= 30;
                 });
-            
+                
             }
         
         },
@@ -66,6 +91,8 @@ ru.hud = function(options) {
         //load the resources to use
         init:function() {
             self.resources.health = ru.resource.load({name:"health"});
+            self.resources.player1win = ru.resource.load({name:"player1win"});
+            self.resources.player2win = ru.resource.load({name:"player2win"});
         
             //load each of the weapon icons
             ru.util.each(options.weapons, function(item, name) {

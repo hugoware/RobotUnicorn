@@ -21,6 +21,8 @@ var hugobot = function() {
                     break;
                 case 4: bot.shoot("tracker");
                     break;
+                case 5: bot.position.x += 25;
+                    return;
                 case 300: throw "sample exception!";
                     break;
             }

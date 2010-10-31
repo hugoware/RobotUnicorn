@@ -43,10 +43,11 @@ ru.tracker = function() {
             });
             
             //update the trailing
+            var fade = 1;
             for (var i = self.settings.trail.length - 1; i-- > Math.max(self.settings.trail.length - 8, 0);) {
-                if (i % 2 != 0) continue;
+                if (i % 2 != 0 || fade > 3) continue;
                 game.effects.add({
-                    name:"tracker",
+                    name:"tracker-fade-"+fade++,
                     life:1,
                     x:self.settings.trail[i].x,
                     y:self.settings.trail[i].y

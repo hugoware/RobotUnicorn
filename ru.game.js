@@ -93,9 +93,35 @@ ru.game = function(options) {
             effects:{},
             players:{
                 player1:new ru.player(options.player1, options, false),
-                player2:new ru.player(options.player2, options, true)
+                player2:new ru.player(options.player2, options, true),
+                playerIsDead:function() {
+                    return self.view.players.player1.isDead() ||
+                        self.view.players.player2.isDead();
+                }
             },
             background:new ru.background(options.background)
+        },
+        
+        //verifies game state information
+        state:{
+        
+            //checks the players for status changes
+            update:function() {
+                if (self.view.players.playerIsDead())
+                    self.state.end();
+            },
+            
+            //ends the game 
+            end:function() {
+                self.view.players.player1.stop();
+                self.view.players.player2.stop();
+                
+                //clear out all projectiles
+                self.view.effects = {};
+                self.view.projectiles = {};
+                
+            }
+        
         },
         
         //updates the timeline for the game
@@ -114,6 +140,9 @@ ru.game = function(options) {
             //update the special effects
             self.effects.update();
             
+            //finally check the game state
+            self.state.update();
+            
             //then the hud view
             self._update(self.view.hud);
             
@@ -124,7 +153,7 @@ ru.game = function(options) {
         //performs common updating calls
         _update:function(unit) {
             unit.update(self);
-            unit.draw(self.canvas);
+            unit.draw(self.canvas, self);
         },
 
         //prepares the game to run

@@ -12,6 +12,7 @@ ru.player = function(bot, options, isPlayer2) {
         
         //displays the bot in the view
         draw:function(canvas) {
+            if (self.state.isDead()) return;
             canvas.draw({
                 resource:self.ship.resource,
                 x:bot.position.x,
@@ -22,6 +23,7 @@ ru.player = function(bot, options, isPlayer2) {
     
         //updates a bot based on the game state
         update:function(game) {
+            if (self.pause) return;
         
             //if the bot has an error, skip the turn
             if (bot.error) return self.manage.error();
@@ -32,7 +34,7 @@ ru.player = function(bot, options, isPlayer2) {
             
             //let the bot have a turn
             try { bot.update(state, control.instance); }
-            catch (e) { bot.error = "Error: " + e.toString(); }
+            catch (e) { bot.error = "Exception: " + e.toString(); }
             
             //then apply the changes
             self.manage.apply(game, control);
@@ -90,6 +92,7 @@ ru.player = function(bot, options, isPlayer2) {
                                 width:self.ship.width,
                                 height:self.ship.height
                             },
+                            speed:options.unit.speed,
                             shoot:function(weapon) {
                                 state.action = "shoot";
                                 state.weapon = ru.util.alias(weapon || "lazer");
@@ -111,8 +114,9 @@ ru.player = function(bot, options, isPlayer2) {
             apply:function(game, control) {
                 
                 //check the movement
-                if (Math.abs(bot.position.x - control.instance.position.x) > control.instance.speed) {
-                    bot.error = "Moved too far on a turn!";
+                
+                if (Math.abs(bot.position.x - control.instance.position.x) > options.unit.speed) {
+                    bot.error = "Exception: Moved too far on a turn!";
                     return;
                 }
                 //movement is okay
@@ -152,6 +156,14 @@ ru.player = function(bot, options, isPlayer2) {
             }
         },
         
+        //causes the unit stop actions
+        stop:function() {
+            self.pause = true;
+            bot.error = null;
+            
+            
+        },
+        
         //prepares this bot for use
         init:function() {
         
@@ -188,6 +200,7 @@ ru.player = function(bot, options, isPlayer2) {
     this.remove = self.remove;
     this.update = self.update;
     this.draw = self.draw;
+    this.stop = self.stop;
     this.isDead = self.state.isDead;
     
     //prepare the unit
