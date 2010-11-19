@@ -4,10 +4,10 @@ ru.lazer = function() {
         
         //details about how this projectile works
         settings:{
-            speed:5,
-            decay:110,
-            damage:20,
-            cooldown:30,
+            speed:4,
+            decay:150,
+            damage:15,
+            cooldown:60,
             sprite:{
                 name:"lazer",
                 height:50,

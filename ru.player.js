@@ -118,7 +118,8 @@ ru.player = function(bot, options, isPlayer2) {
                             ready:function(weapon) {
                                 weapon = ru.util.alias(weapon || "lazer");
                                 return bot.cooldown[weapon] && bot.cooldown[weapon] <= 0;
-                            }
+                            },
+                            previous:bot.previous
                         },
                         action:null,
                         weapon:null
@@ -130,44 +131,92 @@ ru.player = function(bot, options, isPlayer2) {
             
             //attempts to apply the requested rules for a turn
             apply:function(game, control, state) {
+            	var status = { game:game, control:control, state:state };
+            	
+            	//verifies no rules have been broken
+            	var apply = [];
+            	for (var i = 0; i < self.manage.rules.length; i++) {
+            		var rule = self.manage.rules[i];
+            		
+            		//if returning true apply the rule
+            		//if returning false, cause an error
+            		//if returning null, do not crash, but do not apply
+            		//if an exception, display as an error
+            		try {
+	            		//verify this works
+		        		var result = rule.require(status);
+	            		if (result === true) {
+		            		apply.push(rule);
+	            		} 
+	            		else if (result === false) {
+	            			throw rule.error;
+	            		}
+            		}
+            		//append an error
+            		catch(e) {
+            			bot.error = e || "Exception : No idea?!?!?";
+            			apply = [];
+            			break;
+            		}
+            	
+            	}
+            	
+				//apply the changes (if any)
+				for(var item in apply) apply[item].apply(status);
+            	
+            	//lastly, cleanup for the bot
+            	self.manage.housekeeping(game, control, state);
+            	
+            },
             
-                //check the movement
-                if (Math.abs(bot.position.x - control.instance.position.x) > options.unit.speed) {
-                    bot.error = "Exception: Moved too far on a turn!";
-                    return;
-                }
-                //movement is okay
-                else {
-                    bot.position.x = control.instance.position.x;
-                }
-                
+            //cleanup functions for the bots
+            housekeeping:function(game, control, state) {
+            	
                 //stay in the view (not an error for now)
                 var max = { left:self.settings.xPadding, right:state.view.width - (bot.position.width + self.settings.xPadding) };
                 if (bot.position.x < max.left) bot.position.x = max.left;
                 if (bot.position.x > max.right) bot.position.x = max.right;
                 
-                //if firing a weapon
-                if (control.action == "shoot" && 
-                    bot.cooldown[control.weapon] <= 0) {
-                    
-                    //create a projectile for the view
-                    var projectile = game.projectiles.add({
-                        type:control.weapon,
-                        startX:bot.position.x + (bot.position.width / 2),
-                        startY:bot.position.y + (isPlayer2 ? 0 : bot.position.height),
-                        down:!isPlayer2
-                    });
-                    
-                    //update the cooldown
-                    bot.cooldown[control.weapon] = projectile.cooldown;
-                    
-                }
-                
                 //refresh the unit
                 for(var item in bot.cooldown) {
                     bot.cooldown[item]--;
                 }
-            }
+                
+                //update the last state for the unit
+                control.instance.position = ru.util.clone(bot.position);
+                bot.previous = control.instance;
+            
+            },
+            
+            //validation to make sure the bot behaves
+            //in an acceptable manner
+			rules:[
+				{// make sure the bot moved an allowed distance
+					require:function(status) { 
+						return Math.abs(bot.position.x - status.control.instance.position.x) <= options.unit.speed
+					}, 
+					apply:function(status) { bot.position.x = status.control.instance.position.x; },
+					error:"Exception: Moved too far on a turn!"
+				},
+				
+				{//make sure the gun is ready to fire
+					require:function(status) {
+						if (status.control.action != "shoot") return;
+						if (bot.cooldown[status.control.weapon] > 0) return false;
+						return true;
+					},
+					apply:function(status) {
+	                    var projectile = options.game.projectiles.add({
+	                        type:status.control.weapon,
+	                        startX:bot.position.x + (bot.position.width / 2),
+	                        startY:bot.position.y + (isPlayer2 ? 0 : bot.position.height),
+	                        down:!isPlayer2
+	                    });
+	                    bot.cooldown[status.control.weapon] = projectile.cooldown;
+					},
+					error:"Exception: Fired weapon before it was ready!"
+				}
+			]
         
         },
         
@@ -182,8 +231,6 @@ ru.player = function(bot, options, isPlayer2) {
         stop:function() {
             self.pause = true;
             bot.error = null;
-            
-            
         },
         
         //prepares this bot for use

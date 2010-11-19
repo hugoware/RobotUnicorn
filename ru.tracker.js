@@ -6,8 +6,8 @@ ru.tracker = function() {
         settings:{
             speed:1,
             decay:200,
-            gain:0.25,
-            drag:0.25,
+            gain:0.20,
+            drag:0.15,
             damage:20,
             draw:0,
             cooldown:250,
