@@ -1,7 +1,8 @@
 //common update and manage functionality
 ru.player = function(bot, options, isPlayer2) {
+	var enemy;
     var self = {
-    
+		
         //parameters for all bots
         settings:{
             yPadding:40,
@@ -78,7 +79,21 @@ ru.player = function(bot, options, isPlayer2) {
                         view:{
                             height:options.canvas.height,
                             width:options.canvas.width,
-                        }
+                        },
+						enemy:{//All of the opponents information
+							position:{
+								x:enemy.position.x,
+								y:enemy.position.y,
+								width:self.ship.width,//Not Entirly Accurate
+                                height:self.ship.height
+							},
+							health:enemy.life.current,
+                            speed:options.unit.speed,
+							ready:function(weapon) {
+                                weapon = ru.util.alias(weapon || "lazer");
+                                return enemy.cooldown[weapon] && enemy.cooldown[weapon] <= 0;
+                            }
+						}
                     };
                 },
                 
@@ -93,6 +108,7 @@ ru.player = function(bot, options, isPlayer2) {
                                 width:self.ship.width,
                                 height:self.ship.height
                             },
+							health:bot.life.current,
                             speed:options.unit.speed,
                             shoot:function(weapon) {
                                 state.action = "shoot";
@@ -200,6 +216,9 @@ ru.player = function(bot, options, isPlayer2) {
     
     };
     
+	//Find the enemy bot
+	enemy = (bot == options.player1)?options.player2:options.player1;
+	
     //common exposed functionality
     this.bot = bot;
     this.remove = self.remove;
