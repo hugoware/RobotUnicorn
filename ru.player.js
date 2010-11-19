@@ -93,26 +93,7 @@ ru.player = function(bot, options, isPlayer2) {
 							ready:function(weapon) {
                                 weapon = ru.util.alias(weapon || "lazer");
                                 return enemy.cooldown[weapon] && enemy.cooldown[weapon] <= 0;
-                            },
-							projectiles:{
-								var id = 0;
-								var items = {};
-								for (var item in options.game.view.projectiles) {
-									var projectile = options.game.view.projectiles[item];
-									if(projectile.target == enemy){
-										items[id++] = ({
-											uin:item.identity,
-											position:{
-												x:item.control.x,
-												y:item.control.y
-											},
-											speed:item.control.speed,
-											width:item.control.width,
-											height:item.control.height
-										});
-									}
-								}
-							}
+                            }
 						}						
                     };
                 },
