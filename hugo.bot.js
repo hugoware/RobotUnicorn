@@ -15,6 +15,9 @@ var hugobot = function() {
         //bot  : the position and actions for your bot
         update:function(game, bot) {
             self.pattern[self.pattern.current](game, bot);
+            
+            
+            
         }
     };
     

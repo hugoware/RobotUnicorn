@@ -23,7 +23,8 @@ ru.game = function(options) {
                     speed:instance.settings.speed,
                     resource:ru.resource.load({name:params.type}),
                     height:instance.settings.sprite.height,
-                    width:instance.settings.sprite.width
+                    width:instance.settings.sprite.width,
+                    player2:!params.down
                 };
                 
                 //save the actual projectile to use
@@ -38,6 +39,24 @@ ru.game = function(options) {
                 
                 //return the details 
                 return params;
+            },
+            
+            //get all of the projectiles for the owner
+            grab:function(player2) {
+            	var collection = [];
+				for (var projectile in self.view.projectiles) {
+					var item = self.view.projectiles[projectile];
+					if (item.isPlayer2 && !player2) continue;
+					collection.push({
+						id:item,
+						x:item.data.control.x,
+						y:item.data.control.y,
+						speed:item.data.control.speed,
+						height:item.data.control.height,
+						width:item.data.control.width
+					});
+				}
+				return collection;
             },
             
             //drops a projectile from the game

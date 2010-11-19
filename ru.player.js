@@ -81,6 +81,7 @@ ru.player = function(bot, options, isPlayer2) {
                             width:options.canvas.width,
                         },
 						enemy:{//All of the opponents information
+							projectiles:game.projectiles.grab(!isPlayer2),
 							position:{
 								x:enemy.position.x,
 								y:enemy.position.y,

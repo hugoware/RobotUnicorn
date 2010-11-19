@@ -88,6 +88,7 @@ ru.projectile = function(options) {
     };
     
     //public members
+    this.data = options;
     this.update = self.update;
     this.draw = self.draw;
     
