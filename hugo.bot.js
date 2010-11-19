@@ -1,5 +1,6 @@
 var hugobot = function() {
     var self = {
+    	//successful get
     
         //battle pattern
         pattern:{
