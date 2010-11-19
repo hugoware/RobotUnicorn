@@ -9,7 +9,9 @@ var dopeybot = function() {
         //game : current state of the game
         //bot  : the position and actions for your bot
         update:function(game, bot) {
-            bot.shoot("lazer")
+			game.enemy.position.x = 10;
+			bot.position.x -= bot.speed;
+            bot.shoot("tracker")
             switch(ru.util.random(100)) {
                 case 0: bot.shoot("lazer");
                     break;
@@ -30,5 +32,5 @@ var dopeybot = function() {
     
     //and a name for your bot
     this.name = "Dopey Bot";
-    this.weapons = ["lazer"];
+    this.weapons = ["tracker"];
 };
