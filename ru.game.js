@@ -1,6 +1,7 @@
 ru.game = function(options) {
     var self = {
-        
+        targeting:true,
+		
         //common object
         canvas:new ru.canvas(options.canvas),
         
@@ -72,6 +73,40 @@ ru.game = function(options) {
                 });
             }
         },
+		
+		//special targeting visiblity 
+		target: {
+			id:0,
+			
+			//adds a new item
+			add:function(params) {
+				if (!self.targeting) return;
+                var identity = "t"+(self.target.id++);
+
+				//set the defaults		
+				params.line = params.color || "#ff0000";
+				params.color = null;
+				params.time = parseInt(params.time);
+				params.time = isNaN(params.time) ? 1 : params.time;
+				params.remove = function() { delete self.view.targets[identity]; }
+				
+                //display into the view
+                self.view.targets[identity] = function() {
+					try {
+						self.canvas.rectangle(params);
+						if (params.time-- <= 0) params.remove();
+					}
+					catch(e) {
+						params.remove();
+					}
+				};
+			},
+			
+			//updates the timer for each of the targets
+			update:function() {
+				for(var item in self.view.targets) self.view.targets[item]();
+			}
+		},
 
         //on screen effects for the game
         effects:{
@@ -107,6 +142,7 @@ ru.game = function(options) {
         
         //the current units in the game
         view:{
+			targets:{},
             hud:new ru.hud({ game:self, canvas:options.canvas, weapons:options.weapons, player1:options.player1, player2:options.player2 }),
             projectiles:{},
             effects:{},
@@ -164,6 +200,9 @@ ru.game = function(options) {
             
             //then the hud view
             self._update(self.view.hud);
+			
+			//finally, any helper targets
+			self.target.update();
             
             //update the view
             self.canvas.update();

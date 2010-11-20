@@ -4,7 +4,7 @@ var hugobot = function() {
 		game:null,
 		    
 		//writes a log message
-		log:true ? function(msg) { console.log(msg); } : function() { },
+		log:false ? function(msg) { console.log(msg); } : function() { },
 		
 		//keeps doing an action for x times
 		repeat:function(count, action, end) {
@@ -18,6 +18,39 @@ var hugobot = function() {
 				end:end,
 				action:action
 			})
+		},
+		
+		//manages the state of the bot
+		pos:{
+			
+			//compares two locations
+			hit:function(point, rec) {
+				if (point.height && point.width) {
+					return self.pos._check(point.x, point.y, rec) ||
+						self.pos._check(point.x + point.width, point.y, rec)
+						self.pos._check(point.x, point.y + point.height, rec)
+						self.pos._check(point.x + point.width, point.y + point.height, rec);
+				}
+				else {
+					return self.pos._check(point.x, point.y, rec);
+				}
+			},
+			
+			//checks the coordinates
+			_check:function(x, y, rect) {
+				return !(x < rec.x ||
+					y < rec.y || 
+					x > (rec.x + rec.width) ||
+					y > (rec.y + rec.height)
+					);
+			},
+			
+			//checks for if the bot is in danger
+			danger:{
+				
+					
+			}
+			
 		},
 		
 		//moves the bot by the amount requested
@@ -124,6 +157,14 @@ var hugobot = function() {
 				alpha:function() {
 					if (self.state.stationary) self.dir.invert();
 					self.move(self.bot.speed);
+					
+					//the scan area
+					self.game.target({
+						x:self.bot.position.x - 100,
+						y:self.bot.position.y - 150,
+						width:self.bot.position.x + self.bot.position.width + 100,
+						height:100
+					}, "#0ff")
 				}
 			
 			}
@@ -133,6 +174,7 @@ var hugobot = function() {
         //game : current state of the game
         //bot  : the position and actions for your bot
         update:function(game, bot) {
+			game.target(bot.position);
         
         	//sync the state of the bot
         	self.state.sync(game, bot);

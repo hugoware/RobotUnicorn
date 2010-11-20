@@ -70,8 +70,10 @@ ru.canvas = function(options) {
             
             //draws text into the view
             rectangle:function(sprite) {
-                self.context.fillStyle = sprite.color || "white";  
-                self.context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
+                self.context.fillStyle = sprite.color;
+				self.context.strokeStyle = sprite.line;				
+                if (sprite.color) self.context.fillRect(sprite.x, sprite.y, sprite.width, sprite.height);
+				if (sprite.line) self.context.strokeRect(sprite.x, sprite.y, sprite.width, sprite.height);
             }
         },
 

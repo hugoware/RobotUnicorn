@@ -76,6 +76,30 @@ ru.player = function(bot, options, isPlayer2) {
                 //readable details for the game state
                 game:function(game) {
                     return {
+						
+						//special drawing function to see target areas
+						target:function(x,y,width,height,color) {
+							if (!options.game.targeting) return;
+
+							//crazy reassignment if passing a rectangle
+							//shape - rebuild object
+							if (arguments.length <= 2) {
+								if (arguments.length == 2) color = y;
+								width = x.width;
+								height = x.height;
+								y = x.y;
+								x = x.x;
+							}
+							
+							//include the display
+							options.game.target.add({
+								x:x,
+								y:y,
+								width:width,
+								height:height,
+								color:color || "#f00"
+							});
+						},
                         view:{
                             height:options.canvas.height,
                             width:options.canvas.width,
@@ -85,8 +109,8 @@ ru.player = function(bot, options, isPlayer2) {
 							position:{
 								x:enemy.position.x,
 								y:enemy.position.y,
-								width:self.ship.width,//Not Entirly Accurate
-                                height:self.ship.height
+								width:self.ship.resource.width,//Not Entirly Accurate
+                                height:self.ship.resource.height
 							},
 							health:enemy.life.current,
                             speed:options.unit.speed,
@@ -106,8 +130,8 @@ ru.player = function(bot, options, isPlayer2) {
                             position:{
                                 x:bot.position.x,
                                 y:bot.position.y,
-                                width:self.ship.width,
-                                height:self.ship.height
+                                width:self.ship.resource.width,
+                                height:self.ship.resource.height
                             },
 							health:bot.life.current,
                             speed:options.unit.speed,
