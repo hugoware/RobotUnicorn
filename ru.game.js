@@ -47,9 +47,9 @@ ru.game = function(options) {
             	var collection = [];
 				for (var projectile in self.view.projectiles) {
 					var item = self.view.projectiles[projectile];
-					if (item.isPlayer2 && !player2) continue;
+					if ((player2 && !item.data.control.player2) || (!player2 && item.data.control.player2)) continue;
 					collection.push({
-						id:item,
+						id:projectile,
 						x:item.data.control.x,
 						y:item.data.control.y,
 						speed:item.data.control.speed,
