@@ -4,7 +4,7 @@ var hugobot = function() {
 	game:null,
 	    
 	//writes a log message
-	logging:true,
+	logging:false,
 	log:function(msg) { if (self.logging) console.log(msg); },
 	
 	//keeps doing an action for x times
@@ -42,7 +42,32 @@ var hugobot = function() {
 	
 	//manages the state of the bot
 	pos:{
+	    
+	    //checks for boundaries in the view
+	    boundary:{
 		
+		//gets the current boundaries
+		current:function() {
+		    var state = {
+			left:self.pos.boundary.left(),
+			right:self.pos.boundary.right()
+		    };
+		    if (state.right) self.log("blocked right");
+		    if (state.left) self.log("blocked left");
+		    return state;
+		},
+		
+		//at the right side of the screen
+		right:function() {
+		    return ((self.bot.position.x + self.bot.position.width)) > (self.game.view.width - 150);
+		},
+		
+		//at the right left of the screen
+		left:function() {
+		    return (self.bot.position.x) > (self.game.view.width + 50);
+		}
+	    },
+	    
 	    //compares two locations
 	    hit:function(point, rec) {
 		if (point.height && point.width) {
@@ -332,14 +357,19 @@ var hugobot = function() {
 		alpha:function() {
 		    
 		    var danger = self.pos.danger.nearby();
+		    var boundary = self.pos.boundary.current();
 		    if (danger.any) {
 			
 			//always start moving if danger is centered
 			self.state.moving = danger.center > 0;
 			
 			//if moving check the directions
-			if (danger.left > 0) self.state.left = false;
-			else if (danger.right > 0) self.state.left = true;
+			if (danger.left > 0 && danger.left > danger.right) self.state.left = false;
+			else if (danger.right > 0 && danger.right > danger.left) self.state.left = true;
+			
+			//also check for boundaries
+			if (boundary.right) self.state.left = true;
+			else if (boundary.left) self.state.left = false;
 
 			//move at max speed
 			if (self.state.moving) self.move(self.bot.speed);

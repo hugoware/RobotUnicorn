@@ -56,7 +56,7 @@ ru.projectile = function(options) {
                 l:player.bot.position.x,
                 r:player.bot.position.x + player.bot.position.width,
                 t:player.bot.position.y,
-                b:player.bot.position.y + player.bot.position.height,
+                b:player.bot.position.y + player.bot.position.height
             };
 
             //the area of the projectile
