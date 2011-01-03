@@ -27,7 +27,7 @@ var hugobot = function() {
 	    //grabs a random number within a range
 	    random:function(min, max) {
 		
-		//if just passed in a max value
+		//if just passed in a min value
 		if (max == null) {
 		    max = min;
 		    min = 0;

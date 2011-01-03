@@ -76,10 +76,8 @@ var keaganbot = function() {
         //Checking methods
         _checkContain:function(projX, projY, box) {
 		return !(
-		    projX < box.x ||
-		    projX > (box.x + box.width) ||
-		    projY < box.y ||
-		    projY > (box.y + box.height)
+		    projX < box.x || projX > (box.x + box.width) ||
+		    projY < box.y || projY > (box.y + box.height)
 		    );
         },
         detectProjectileinFront:function() {
@@ -100,14 +98,27 @@ var keaganbot = function() {
             //check the projectiles
 	    for (var item in self.projectiles.active) {
 		var projectile = self.projectiles.active[item];
-                self.state.dangerStates.centerDanger = self._checkContain(projectile.x+projectile.width/2, projectile.y, self.dangerZones.center());
-                self.state.dangerStates.flank_leftDanger = self._checkContain(projectile.width, projectile.y, self.dangerZones.flank.left());
-                self.state.dangerStates.flank_rightDanger = self._checkContain(projectile.x, projectile.y, self.dangerZones.flank.right());
+                self.state.dangerStates.centerDanger = self.anyContain(projectile, self.dangerZones.center());
+                self.state.dangerStates.flank_leftDanger = self.anyContain(projectile, self.dangerZones.flank.left());
+                self.state.dangerStates.flank_rightDanger = self.anyContain(projectile, self.dangerZones.flank.right());
             }
             
             if(self.state.dangerStates.centerDanger || self.state.dangerStates.flank_leftDanger || self.state.dangerStates.flank_rightDanger)
+            {
                 self.state.dangerStates.generalDanger = true;
+                self.log("Danger!");
+            }
         },
+        anyContain:function(point, rec) {
+		if (point.height && point.width) {
+		    return self._checkContain(point.x, point.y, rec) ||
+			self._checkContain(point.x + point.width, point.y, rec) ||
+			self._checkContain(point.x, point.y + point.height, rec) ||
+			self._checkContain(point.x + point.width, point.y + point.height, rec);
+		}
+		
+	        return self._checkContain(point.x, point.y, rec);
+	    },
         
         
         //Movement Functions
@@ -115,7 +126,7 @@ var keaganbot = function() {
             if(projectileInfront)
             {
                 self.state.dashed.lastSpeed = self.speed;
-                self.speed = self.right?9:-9;
+                self.speed = self.right?self.unit.speed:-self.unit.speed;
                 self.state.dashed.occured = true;
             }
         },
@@ -133,13 +144,18 @@ var keaganbot = function() {
             self.log("force called flip");
         },
         progressMovement:function() {
-            self.wallBounce();
             self.unit.position.x += self.speed;
+            self.wallBounce();
         },
         stealthMovement:function(){
             //If in danger we are going to move... else sit still
             if(self.state.dangerStates.generalDanger)
             {
+                /*if(self.state.dangerStates.centerDanger)
+                {
+                    if(self.state.dangerStates)
+                        self.dash(true);
+                }
                 if(self.right == true)
                 {
                     if(self.state.dangerStates.flank_rightDanger)
@@ -156,9 +172,8 @@ var keaganbot = function() {
                         self.dash(true);
                     }
                     
-                }
-                if(self.state.dangerStates.centerDanger)
-                    self.dash(true);
+                }*/
+                self.dash(true);
             }
             self.progressMovement();
         },
@@ -194,7 +209,7 @@ var keaganbot = function() {
             //Dodge
             self.stealthMovement();
             
-            self.speedFireWeapon();
+            //self.speedFireWeapon();
             
             if(self.logging)
             {
